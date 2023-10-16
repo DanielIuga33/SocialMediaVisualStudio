@@ -649,7 +649,15 @@ void UI::optionB(int id)
 			if (msg.get_id2() == id) {
 				User u = srv_user.find_by_id(msg.get_id1());
 				friends.push_back(msg.get_id1());
-				std::cout << "\n [" << i << "] " << u.get_surname() << " " << u.get_name() << " sent you a message\n";
+				std::cout << "\n [" << i << "] *" << u.get_surname() << " " << u.get_name() << " sent you a message\n";
+				i++;
+			}
+		}
+		for (Message msg : srv_msg.get_all()) {
+			if (msg.get_id1() == id) {
+				User u = srv_user.find_by_id(msg.get_id2());
+				friends.push_back(msg.get_id2());
+				std::cout << "\n [" << i << "] " << "You sent " << u.get_surname() << " " << u.get_name() << " a message\n";
 				i++;
 			}
 		}
@@ -659,10 +667,10 @@ void UI::optionB(int id)
 			write_a_message(id, friends[0]);
 			return;
 		}
-		if (friends.size() == 0) { 
+		if (friends.size() == 0) {
 			std::cout << "You haven't received any messages yet !\n";
 			this_thread::sleep_for(chrono::milliseconds(1000));
-			return; 
+			return;
 		}
 		std::cout << "Choose who you want to answer or press x to exit: "; std::cin >> choice;
 		if (choice == "x") return;
@@ -693,10 +701,12 @@ void UI::run()
 		std::cout << "\t\t\tGive the option you want: "; std::cin >> optiune;
 		if (optiune == "1") {
 			User u = user_login();
-			if (u != User()) user_menu_handling(u);;
+			if (u != User()) user_menu_handling(u);
 		}
-		else if (optiune == "2")
+		else if (optiune == "2") {
 			User u = user_register();
+			if (u != User()) user_menu_handling(u);
+		}
 		else if (optiune == "admin") {
 			if (admin_login()) admin_menu();
 		}
