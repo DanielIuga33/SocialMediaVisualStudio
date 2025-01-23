@@ -268,31 +268,34 @@ User UI::user_login() {
 		this_thread::sleep_for(chrono::milliseconds(1000));
 		return u;
 	}
-	std::cout << "\t\t\t\n        The password is incorrect !\n\tPlease try again !\n";
+	std::cout << "\t\t\t\n        The password is incorrect !\n\tPlease try again or type x to quit!\n";
 	std::cout << "\t\tPassword : "; //cin >> p;
 	char q[100] = { 0 };
 	for (i = 0; i < 100; i++) {
 		q[i] = _getch(); _putch('*');
 		if (q[i] == 13) break;
 	};
+	if (strlen(q) == 2 && q[0] == 'x') return User();
 	if (u.get_password() == q) {
 		std::cout << "\n\t\tYou succesfully logged in !\n\n\n\n";
 		this_thread::sleep_for(chrono::milliseconds(1000));
 		return u;
 	}
-	std::cout << "\t\t\t\n        The password is incorrect !\n\tPlease try again\n";
+	std::cout << "\t\t\t\n        The password is incorrect !\n\tPlease try again or type x to quit!\n";
 	std::cout << "\t\tPassword : "; //cin >> p;
 	char s[100] = { 0 };
 	for (i = 0; i < 100; i++) {
 		s[i] = _getch(); _putch('*');
 		if (s[i] == 13) break;
 	};
+	if (strlen(q) == 2 && q[0] == 'x') return User();
 	if (u.get_password() == s) {
 		std::cout << "\n\t\tYou succesfully logged in !\n\n\n\n";
 		this_thread::sleep_for(chrono::milliseconds(1000));
 		return u;
 	}
 	std::cout << "Too many attempts !\n";
+	this_thread::sleep_for(chrono::milliseconds(2000));
 	return User();
 }
 
@@ -306,7 +309,9 @@ User UI::user_register()
 	std::cout << "\tSurname: "; std::getline(std::cin >> ws, surname);
 	std::cout << "\tEmail: "; std::cin >> email;
 	while (!validator.validate_email(email) || srv_user.exists_by_email(email)) {
-		std::cout << "This email already exists!\n Please try another one or press x to quit\n";
+		if (srv_user.exists_by_email(email))
+			std::cout << "This email already exists!\n ";
+		std::cout << "Please try another one or press x to quit\n";
 		email = "";
 		std::cout << "\tEmail: "; std::cin >> email;
 		if (email == "x")
@@ -332,7 +337,7 @@ User UI::user_register()
 			std::cout << std::endl;
 			int x = 0;
 			while (strcmp(c,p) != 0 && x < 3) {
-				std::cout << "\n\tPassword doesn't match, try again !!!" << std::endl;
+				std::cout << "\n\tPassword doesn't match, try again or type x to quir !" << std::endl;
 				x++;
 				std::cout << "\tConfirm Password:"; //cin >> p;
 				char s[100] = { 0 };
@@ -341,6 +346,7 @@ User UI::user_register()
 					s[i] = _getch(); _putch('*');
 					if (s[i] == 13) break;
 				};
+				if (strlen(s) == 2 && s[0] == 'x') std::cout << "YES";
 				if (strcmp(s, p) == 0) x = 4;
 			}
 			if (x == 3) return User();
@@ -352,6 +358,7 @@ User UI::user_register()
 				return User(id, name, surname, email, p, stoi(age));
 			}
 		}
+		this_thread::sleep_for(chrono::milliseconds(2000));
 	}
 	return User();
 }
